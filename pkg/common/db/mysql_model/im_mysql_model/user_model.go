@@ -57,7 +57,13 @@ func GetAllUser() ([]db.User, error) {
 
 func GetUserByUserID(userID string) (*db.User, error) {
 	var user db.User
-	err := db.DB.MysqlDB.DefaultGormDB().Table("users").Where("user_id=?", userID).Take(&user).Error
+	tx := db.DB.MysqlDB.DefaultGormDB().Table("users")
+	if utils.CheckMobile(userID) { // 兼容手机号查找
+		tx = tx.Where("phone_number = ?", userID)
+	} else {
+		tx = tx.Where("user_id=?", userID)
+	}
+	err := tx.Take(&user).Error
 	if err != nil {
 		return nil, err
 	}

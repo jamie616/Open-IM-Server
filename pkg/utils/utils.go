@@ -8,6 +8,7 @@ import (
 	"github.com/jinzhu/copier"
 	"github.com/pkg/errors"
 	"math/rand"
+	"regexp"
 	"runtime"
 	"strconv"
 	"strings"
@@ -44,7 +45,7 @@ func cleanUpFuncName(funcName string) string {
 	return funcName[end+1:]
 }
 
-//Get the intersection of two slices
+// Get the intersection of two slices
 func Intersect(slice1, slice2 []uint32) []uint32 {
 	m := make(map[uint32]bool)
 	n := make([]uint32, 0)
@@ -60,7 +61,7 @@ func Intersect(slice1, slice2 []uint32) []uint32 {
 	return n
 }
 
-//Get the diff of two slices
+// Get the diff of two slices
 func Difference(slice1, slice2 []uint32) []uint32 {
 	m := make(map[uint32]bool)
 	n := make([]uint32, 0)
@@ -82,7 +83,7 @@ func Difference(slice1, slice2 []uint32) []uint32 {
 	return n
 }
 
-//Get the intersection of two slices
+// Get the intersection of two slices
 func IntersectString(slice1, slice2 []string) []string {
 	m := make(map[string]bool)
 	n := make([]string, 0)
@@ -98,7 +99,7 @@ func IntersectString(slice1, slice2 []string) []string {
 	return n
 }
 
-//Get the diff of two slices
+// Get the diff of two slices
 func DifferenceString(slice1, slice2 []string) []string {
 	m := make(map[string]bool)
 	n := make([]string, 0)
@@ -189,4 +190,21 @@ func Pb2Map(pb proto.Message) (map[string]interface{}, error) {
 	var out map[string]interface{}
 	err := json.Unmarshal(jsonCnt, &out)
 	return out, err
+}
+
+// CheckMobile 检验手机号
+func CheckMobile(phone string) bool {
+	// 匹配规则
+	// ^1第一位为一
+	// [345789]{1} 后接一位345789 的数字
+	// \\d \d的转义 表示数字 {9} 接9位
+	// $ 结束符
+	regRuler := "^1[345789]{1}\\d{9}$"
+
+	// 正则调用规则
+	reg := regexp.MustCompile(regRuler)
+
+	// 返回 MatchString 是否匹配
+	return reg.MatchString(phone)
+
 }
