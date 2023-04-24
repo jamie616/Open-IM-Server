@@ -40,9 +40,9 @@ func initPrometheus() {
 	promePkg.NewPullMsgBySeqListTotalCounter()
 	promePkg.NewMsgOnlinePushSuccessCounter()
 	promePkg.NewOnlineUserGauges()
-	//promePkg.NewSingleChatMsgRecvSuccessCounter()
-	//promePkg.NewGroupChatMsgRecvSuccessCounter()
-	//promePkg.NewWorkSuperGroupChatMsgRecvSuccessCounter()
+	// promePkg.NewSingleChatMsgRecvSuccessCounter()
+	// promePkg.NewGroupChatMsgRecvSuccessCounter()
+	// promePkg.NewWorkSuperGroupChatMsgRecvSuccessCounter()
 }
 
 func (r *RPCServer) onInit(rpcPort int) {
@@ -101,23 +101,23 @@ func (r *RPCServer) run() {
 	}
 }
 func (r *RPCServer) OnlinePushMsg(_ context.Context, in *pbRelay.OnlinePushMsgReq) (*pbRelay.OnlinePushMsgResp, error) {
-	//log.NewInfo(in.OperationID, "PushMsgToUser is arriving", in.String())
-	//var resp []*pbRelay.SingleMsgToUserPlatform
-	//msgBytes, _ := proto.Marshal(in.MsgData)
-	//mReply := Resp{
+	// log.NewInfo(in.OperationID, "PushMsgToUser is arriving", in.String())
+	// var resp []*pbRelay.SingleMsgToUserPlatform
+	// msgBytes, _ := proto.Marshal(in.MsgData)
+	// mReply := Resp{
 	//	ReqIdentifier: constant.WSPushMsg,
 	//	OperationID:   in.OperationID,
 	//	Data:          msgBytes,
-	//}
-	//var replyBytes bytes.Buffer
-	//enc := gob.NewEncoder(&replyBytes)
-	//err := enc.Encode(mReply)
-	//if err != nil {
+	// }
+	// var replyBytes bytes.Buffer
+	// enc := gob.NewEncoder(&replyBytes)
+	// err := enc.Encode(mReply)
+	// if err != nil {
 	//	log.NewError(in.OperationID, "data encode err", err.Error())
-	//}
-	//var tag bool
-	//recvID := in.PushToUserID
-	//for _, v := range r.platformList {
+	// }
+	// var tag bool
+	// recvID := in.PushToUserID
+	// for _, v := range r.platformList {
 	//	if conn := ws.getUserConn(recvID, v); conn != nil {
 	//		tag = true
 	//		resultCode := sendMsgToUser(conn, replyBytes.Bytes(), in, v, recvID)
@@ -135,13 +135,13 @@ func (r *RPCServer) OnlinePushMsg(_ context.Context, in *pbRelay.OnlinePushMsgRe
 	//		}
 	//		resp = append(resp, temp)
 	//	}
-	//}
-	//if !tag {
+	// }
+	// if !tag {
 	//	log.NewDebug(in.OperationID, "push err ,no matched ws conn not in map", in.String())
-	//}
-	//return &pbRelay.OnlinePushMsgResp{
+	// }
+	// return &pbRelay.OnlinePushMsgResp{
 	//	Resp: resp,
-	//}, nil
+	// }, nil
 	return nil, nil
 }
 func (r *RPCServer) GetUsersOnlineStatus(_ context.Context, req *pbRelay.GetUsersOnlineStatusReq) (*pbRelay.GetUsersOnlineStatusResp, error) {
@@ -175,10 +175,11 @@ func (r *RPCServer) GetUsersOnlineStatus(_ context.Context, req *pbRelay.GetUser
 	return &resp, nil
 }
 
+// SuperGroupOnlineBatchPushOneMsg 推送消息给用户
 func (r *RPCServer) SuperGroupOnlineBatchPushOneMsg(_ context.Context, req *pbRelay.OnlineBatchPushOneMsgReq) (*pbRelay.OnlineBatchPushOneMsgResp, error) {
 	log.NewInfo(req.OperationID, "BatchPushMsgToUser is arriving", req.String())
 	var singleUserResult []*pbRelay.SingelMsgToUserResultList
-	//r.GetBatchMsgForPush(req.OperationID,req.MsgData,req.PushToUserIDList,)
+	// r.GetBatchMsgForPush(req.OperationID,req.MsgData,req.PushToUserIDList,)
 	msgBytes, _ := proto.Marshal(req.MsgData)
 	mReply := Resp{
 		ReqIdentifier: constant.WSPushMsg,
@@ -238,7 +239,7 @@ func (r *RPCServer) SuperGroupOnlineBatchPushOneMsg(_ context.Context, req *pbRe
 func (r *RPCServer) SuperGroupBackgroundOnlinePush(_ context.Context, req *pbRelay.OnlineBatchPushOneMsgReq) (*pbRelay.OnlineBatchPushOneMsgResp, error) {
 	log.NewInfo(req.OperationID, "BatchPushMsgToUser is arriving", req.String())
 	var singleUserResult []*pbRelay.SingelMsgToUserResultList
-	//r.GetBatchMsgForPush(req.OperationID,req.MsgData,req.PushToUserIDList,)
+	// r.GetBatchMsgForPush(req.OperationID,req.MsgData,req.PushToUserIDList,)
 	msgBytes, _ := proto.Marshal(req.MsgData)
 	mReply := Resp{
 		ReqIdentifier: constant.WSPushMsg,
@@ -285,10 +286,10 @@ func (r *RPCServer) SuperGroupBackgroundOnlinePush(_ context.Context, req *pbRel
 	}, nil
 }
 func (r *RPCServer) OnlineBatchPushOneMsg(_ context.Context, req *pbRelay.OnlineBatchPushOneMsgReq) (*pbRelay.OnlineBatchPushOneMsgResp, error) {
-	//log.NewInfo(req.OperationID, "BatchPushMsgToUser is arriving", req.String())
-	//var singleUserResult []*pbRelay.SingelMsgToUserResultList
+	// log.NewInfo(req.OperationID, "BatchPushMsgToUser is arriving", req.String())
+	// var singleUserResult []*pbRelay.SingelMsgToUserResultList
 	//
-	//for _, v := range req.PushToUserIDList {
+	// for _, v := range req.PushToUserIDList {
 	//	var resp []*pbRelay.SingleMsgToUserPlatform
 	//	tempT := &pbRelay.SingelMsgToUserResultList{
 	//		UserID: v,
@@ -351,10 +352,10 @@ func (r *RPCServer) OnlineBatchPushOneMsg(_ context.Context, req *pbRelay.Online
 	//	}
 	//	tempT.Resp = resp
 	//	singleUserResult = append(singleUserResult, tempT)
-	//}
-	//return &pbRelay.OnlineBatchPushOneMsgResp{
+	// }
+	// return &pbRelay.OnlineBatchPushOneMsgResp{
 	//	SinglePushResult: singleUserResult,
-	//}, nil
+	// }, nil
 	return nil, nil
 }
 func (r *RPCServer) encodeWsData(wsData *sdk_ws.MsgData, operationID string) (bytes.Buffer, error) {

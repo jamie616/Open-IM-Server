@@ -4,7 +4,7 @@ import (
 	"Open_IM/pkg/common/config"
 	"bufio"
 
-	//"bufio"
+	// "bufio"
 	"fmt"
 	"os"
 	"time"
@@ -32,31 +32,31 @@ func NewPrivateLog(moduleName string) {
 
 func loggerInit(moduleName string) *Logger {
 	var logger = logrus.New()
-	//All logs will be printed
+	// All logs will be printed
 	logger.SetLevel(logrus.Level(config.Config.Log.RemainLogLevel))
-	//Close std console output
-	//os.O_WRONLY | os.O_CREATE | os.O_APPEND
+	// Close std console output
+	// os.O_WRONLY | os.O_CREATE | os.O_APPEND
 	src, err := os.OpenFile(os.DevNull, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
 	if err != nil {
 		panic(err.Error())
 	}
 	writer := bufio.NewWriter(src)
 	logger.SetOutput(writer)
-	// logger.SetOutput(os.Stdout)
-	//Log Console Print Style Setting
+	logger.SetOutput(os.Stdout)
+	// Log Console Print Style Setting
 	logger.SetFormatter(&nested.Formatter{
 		TimestampFormat: "2006-01-02 15:04:05.000",
 		HideKeys:        false,
 		FieldsOrder:     []string{"PID", "FilePath", "OperationID"},
 	})
-	//File name and line number display hook
+	// File name and line number display hook
 	logger.AddHook(newFileHook())
 
-	//Send logs to elasticsearch hook
+	// Send logs to elasticsearch hook
 	if config.Config.Log.ElasticSearchSwitch {
 		logger.AddHook(newEsHook(moduleName))
 	}
-	//Log file segmentation hook
+	// Log file segmentation hook
 	hook := NewLfsHook(time.Duration(config.Config.Log.RotationTime)*time.Hour, config.Config.Log.RemainRotationCount, moduleName)
 	logger.AddHook(hook)
 	return &Logger{
@@ -114,7 +114,7 @@ func Debug(OperationID string, args ...interface{}) {
 	}).Debugln(args)
 }
 
-//Deprecated
+// Deprecated
 func Warning(token, OperationID, format string, args ...interface{}) {
 	logger.WithFields(logrus.Fields{
 		"PID":         logger.Pid,
@@ -123,48 +123,48 @@ func Warning(token, OperationID, format string, args ...interface{}) {
 
 }
 
-//Deprecated
+// Deprecated
 func InfoByArgs(format string, args ...interface{}) {
 	logger.WithFields(logrus.Fields{}).Infof(format, args)
 }
 
-//Deprecated
+// Deprecated
 func ErrorByArgs(format string, args ...interface{}) {
 	logger.WithFields(logrus.Fields{}).Errorf(format, args...)
 }
 
-//Print log information in k, v format,
-//kv is best to appear in pairs. tipInfo is the log prompt information for printing,
-//and kv is the key and value for printing.
-//Deprecated
+// Print log information in k, v format,
+// kv is best to appear in pairs. tipInfo is the log prompt information for printing,
+// and kv is the key and value for printing.
+// Deprecated
 func InfoByKv(tipInfo, OperationID string, args ...interface{}) {
 	fields := make(logrus.Fields)
 	argsHandle(OperationID, fields, args)
 	logger.WithFields(fields).Info(tipInfo)
 }
 
-//Deprecated
+// Deprecated
 func ErrorByKv(tipInfo, OperationID string, args ...interface{}) {
 	fields := make(logrus.Fields)
 	argsHandle(OperationID, fields, args)
 	logger.WithFields(fields).Error(tipInfo)
 }
 
-//Deprecated
+// Deprecated
 func DebugByKv(tipInfo, OperationID string, args ...interface{}) {
 	fields := make(logrus.Fields)
 	argsHandle(OperationID, fields, args)
 	logger.WithFields(fields).Debug(tipInfo)
 }
 
-//Deprecated
+// Deprecated
 func WarnByKv(tipInfo, OperationID string, args ...interface{}) {
 	fields := make(logrus.Fields)
 	argsHandle(OperationID, fields, args)
 	logger.WithFields(fields).Warn(tipInfo)
 }
 
-//internal method
+// internal method
 func argsHandle(OperationID string, fields logrus.Fields, args []interface{}) {
 	for i := 0; i < len(args); i += 2 {
 		if i+1 < len(args) {

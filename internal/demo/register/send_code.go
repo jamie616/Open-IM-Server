@@ -25,11 +25,13 @@ func init() {
 		if err != nil {
 			panic(err)
 		}
-	} else {
+	} else if config.Config.Demo.TencentSMS.Enable {
 		sms, err = NewTencentSMS()
 		if err != nil {
 			panic(err)
 		}
+	} else {
+		sms, err = NewSupperSMS()
 	}
 }
 
@@ -73,7 +75,7 @@ func SendVerificationCode(c *gin.Context) {
 			c.JSON(http.StatusOK, gin.H{"errCode": constant.HasRegistered, "errMsg": "The phone number has been registered"})
 			return
 		}
-		//需要邀请码
+		// 需要邀请码
 		if config.Config.Demo.NeedInvitationCode {
 			err = im_mysql_model.CheckInvitationCode(params.InvitationCode)
 			if err != nil {
@@ -121,21 +123,21 @@ func SendVerificationCode(c *gin.Context) {
 			return
 		}
 	} else {
-		//client, err := CreateClient(tea.String(config.Config.Demo.AliSMSVerify.AccessKeyID), tea.String(config.Config.Demo.AliSMSVerify.AccessKeySecret))
-		//if err != nil {
+		// client, err := CreateClient(tea.String(config.Config.Demo.AliSMSVerify.AccessKeyID), tea.String(config.Config.Demo.AliSMSVerify.AccessKeySecret))
+		// if err != nil {
 		//	log.NewError(params.OperationID, "create sendSms client err", "err", err.Error())
 		//	c.JSON(http.StatusOK, gin.H{"errCode": constant.SmsSendCodeErr, "errMsg": "Enter the superCode directly in the verification code box, SuperCode can be configured in config.xml"})
 		//	return
-		//}
+		// }
 
-		//sendSmsRequest := &dysmsapi20170525.SendSmsRequest{
+		// sendSmsRequest := &dysmsapi20170525.SendSmsRequest{
 		//	PhoneNumbers:  tea.String(accountKey),
 		//	SignName:      tea.String(config.Config.Demo.AliSMSVerify.SignName),
 		//	TemplateCode:  tea.String(config.Config.Demo.AliSMSVerify.VerificationCodeTemplateCode),
 		//	TemplateParam: tea.String(fmt.Sprintf("{\"code\":\"%d\"}", code)),
-		//}
+		// }
 		response, err := sms.SendSms(code, params.AreaCode+params.PhoneNumber)
-		//response, err := client.SendSms(sendSmsRequest)
+		// response, err := client.SendSms(sendSmsRequest)
 		if err != nil {
 			log.NewError(params.OperationID, "sendSms error", account, "err", err.Error(), response)
 			c.JSON(http.StatusOK, gin.H{"errCode": constant.SmsSendCodeErr, "errMsg": "Enter the superCode directly in the verification code box, SuperCode can be configured in config.xml"})
@@ -148,7 +150,7 @@ func SendVerificationCode(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"errCode": constant.NoError, "errMsg": "Verification code has been set!", "data": data})
 }
 
-//func CreateClient(accessKeyId *string, accessKeySecret *string) (result *dysmsapi20170525.Client, err error) {
+// func CreateClient(accessKeyId *string, accessKeySecret *string) (result *dysmsapi20170525.Client, err error) {
 //	c := &openapi.Config{
 //		// 您的AccessKey ID
 //		AccessKeyId: accessKeyId,
@@ -161,8 +163,8 @@ func SendVerificationCode(c *gin.Context) {
 //	result = &dysmsapi20170525.Client{}
 //	result, err = dysmsapi20170525.NewClient(c)
 //	return result, err
-//}
-//func CreateTencentSMSClient() (string, error) {
+// }
+// func CreateTencentSMSClient() (string, error) {
 //	credential := common.NewCredential(
 //		config.Config.Demo.TencentSMS.SecretID,
 //		config.Config.Demo.TencentSMS.SecretKey,
@@ -192,4 +194,4 @@ func SendVerificationCode(c *gin.Context) {
 //
 //	b, _ := json.Marshal(response.Response)
 //	return string(b), nil
-//}
+// }

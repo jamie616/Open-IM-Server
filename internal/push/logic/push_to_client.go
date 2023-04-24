@@ -38,7 +38,7 @@ type AtContent struct {
 	IsAtSelf   bool     `json:"isAtSelf"`
 }
 
-//var grpcCons []*grpc.ClientConn
+// var grpcCons []*grpc.ClientConn
 
 func MsgToUser(pushMsg *pbPush.PushMsgReq) {
 	var wsResult []*pbRelay.SingelMsgToUserResultList
@@ -57,10 +57,11 @@ func MsgToUser(pushMsg *pbPush.PushMsgReq) {
 		return
 	}
 
-	//Online push message
+	// Online push message
 	log.Debug(pushMsg.OperationID, "len  grpc", len(grpcCons), "data", pushMsg.String())
 	for _, v := range grpcCons {
 		msgClient := pbRelay.NewRelayClient(v)
+		// 广播消息给gateway
 		reply, err := msgClient.SuperGroupOnlineBatchPushOneMsg(context.Background(), &pbRelay.OnlineBatchPushOneMsgReq{OperationID: pushMsg.OperationID, MsgData: pushMsg.MsgData, PushToUserIDList: []string{pushMsg.PushToUserID}})
 		if err != nil {
 			log.NewError("SuperGroupOnlineBatchPushOneMsg push data to client rpc err", pushMsg.OperationID, "err", err)
@@ -182,7 +183,7 @@ func MsgToSuperGroupUser(pushMsg *pbPush.PushMsgReq) {
 
 	grpcCons := getcdv3.GetDefaultGatewayConn4Unique(config.Config.Etcd.EtcdSchema, strings.Join(config.Config.Etcd.EtcdAddr, ","), pushMsg.OperationID)
 
-	//Online push message
+	// Online push message
 	log.Debug(pushMsg.OperationID, "len  grpc", len(grpcCons), "data", pushMsg.String())
 	for _, v := range grpcCons {
 		msgClient := pbRelay.NewRelayClient(v)
@@ -220,7 +221,7 @@ func MsgToSuperGroupUser(pushMsg *pbPush.PushMsgReq) {
 			}
 		}
 		onlineFailedUserIDList := utils.DifferenceString(onlineSuccessUserIDList, pushToUserIDList)
-		//Use offline push messaging
+		// Use offline push messaging
 		var title, detailContent string
 		if len(onlineFailedUserIDList) > 0 {
 			var offlinePushUserIDList []string
@@ -301,7 +302,7 @@ func MsgToSuperGroupUser(pushMsg *pbPush.PushMsgReq) {
 			needBackgroupPushUserID := utils.IntersectString(needOfflinePushUserIDList, WebAndPcBackgroundUserIDList)
 			grpcCons := getcdv3.GetDefaultGatewayConn4Unique(config.Config.Etcd.EtcdSchema, strings.Join(config.Config.Etcd.EtcdAddr, ","), pushMsg.OperationID)
 			if len(needBackgroupPushUserID) > 0 {
-				//Online push message
+				// Online push message
 				log.Debug(pushMsg.OperationID, "len  grpc", len(grpcCons), "data", pushMsg.String())
 				for _, v := range grpcCons {
 					msgClient := pbRelay.NewRelayClient(v)

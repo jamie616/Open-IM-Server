@@ -1,6 +1,6 @@
 package base_info
 
-//UserID               string   `protobuf:"bytes,1,opt,name=UserID" json:"UserID,omitempty"`
+// UserID               string   `protobuf:"bytes,1,opt,name=UserID" json:"UserID,omitempty"`
 //	Nickname             string   `protobuf:"bytes,2,opt,name=Nickname" json:"Nickname,omitempty"`
 //	FaceUrl              string   `protobuf:"bytes,3,opt,name=FaceUrl" json:"FaceUrl,omitempty"`
 //	Gender               int32    `protobuf:"varint,4,opt,name=Gender" json:"Gender,omitempty"`
@@ -18,7 +18,7 @@ type UserRegisterReq struct {
 
 type UserTokenInfo struct {
 	UserID      string `json:"userID"`
-	Token       string `json:"token"`
+	Token       string `json:"imToken"`
 	ExpiredTime int64  `json:"expiredTime"`
 }
 type UserRegisterResp struct {
@@ -53,10 +53,10 @@ type ParseTokenReq struct {
 	OperationID string `json:"operationID" binding:"required"`
 }
 
-//type ParseTokenResp struct {
+// type ParseTokenResp struct {
 //	CommResp
 //	ExpireTime int64 `json:"expireTime" binding:"required"`
-//}
+// }
 
 type ExpireTime struct {
 	ExpireTimeSeconds uint32 `json:"expireTimeSeconds" `
